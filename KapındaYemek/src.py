@@ -11,7 +11,7 @@ def home():
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="tHfB1848*D2#",
+        password="tHfB1848*D2#",               #(#) yorummus, enter YOUR db password
         database="homework"
     )
     cursor = conn.cursor()
