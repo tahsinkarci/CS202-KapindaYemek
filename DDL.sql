@@ -1,6 +1,6 @@
-CREATE Schema If Not exists homework;
+CREATE Schema If Not exists project;
 
-USE homework;
+USE project;
 
 -- Entites --
 CREATE TABLE User (
@@ -60,6 +60,7 @@ CREATE TABLE MenuItem (
 
 CREATE TABLE Discount (
   discount_id  VARCHAR(10),
+  menu_item_id  VARCHAR(10),
   start_date   TIMESTAMP,
   finish_date  TIMESTAMP,
   amount       DECIMAL(5,2),
