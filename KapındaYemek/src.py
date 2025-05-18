@@ -13,7 +13,7 @@ def home():
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="tHfB1848*D2#",  # enter YOUR db password
+        password="your_unique_db_pass",  # enter YOUR db password
         database="project"
     )
     cursor = conn.cursor()
@@ -31,7 +31,7 @@ def login():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="tHfB1848*D2#",
+            password="your_unique_db_pass",
             database="project"
         )
         cursor = conn.cursor()
@@ -80,7 +80,7 @@ def register():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="tHfB1848*D2#",
+            password="your_unique_db_pass",
             database="project"
         )
         cursor = conn.cursor()
@@ -98,7 +98,7 @@ def register():
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
-                        password="tHfB1848*D2#",
+                        password="your_unique_db_pass",
                         database="project"
                     )
                     cursor = conn.cursor()
