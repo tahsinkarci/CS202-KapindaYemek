@@ -5,7 +5,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="your_unique_db_pass",
+        password="tHfB1848*D2#",
         database="project"
     )
 
@@ -17,6 +17,15 @@ def get_user_by_username(username):
     cursor.close()
     conn.close()
     return result
+
+def username_exists(username):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM User WHERE username=%s", (username,))
+    exists = cursor.fetchone() is not None
+    cursor.close()
+    conn.close()
+    return exists
 
 def is_manager(user_id):
     conn = get_db_connection()

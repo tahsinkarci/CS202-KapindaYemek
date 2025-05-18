@@ -1,0 +1,86 @@
+body {
+    background-color: #f0f4f8;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #2d3e50;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1.1em;
+    transition: color 0.2s;
+    vertical-align: middle;
+}
+
+nav a:hover {
+    color: #ffd700;
+}
+
+nav a.home::before {
+    content: "🏠 ";
+}
+
+nav a.login::before {
+    content: "🔑 ";
+}
+
+main {
+    padding: 40px 20px;
+    min-height: 60vh;
+}
+
+button {
+    background-color: #ff9800;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #e65100;
+}
+
+footer {
+    background-color: #2d3e50;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.95em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li::before {
+    content: "👤 ";
+    margin-right: 5px;
+}

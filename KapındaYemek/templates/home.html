@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block title %}Kapında Yemek - Home{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block content %}
+    <h2>Welcome to Kapında Yemek!</h2>
+    <p>Order delicious food delivered to your door.</p>
+    <a href="{{ url_for('login') }}">
+        <button type="button">Order Now!</button>
+    </a>
+{% endblock %}
