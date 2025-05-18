@@ -104,13 +104,13 @@ class db:
 ############# Menu selection page Methods ######################
 
     #o restaurant in bütün menuitemlerini {name, price} şeklinde döndürür
-    def listAllMenuItemsByIDOfRestaurantWithPrice(self, restaurant_id): # workbenchte calısıo
+    def listAllMenuItemsByNameOfRestaurantWithPrice(self, name): # workbenchte calısıo
         cursor = self.conn.cursor(prepared=True)
         cursor.execute("SELECT m.name,m.price"
                         "FROM restaurant r"
                         "JOIN offers o ON r.restaurant_id = o.restaurant_id"
                         "JOIN menuitem m ON o.menu_item_id  = m.menu_item_id"
-                        "WHERE r.restaurant_id = %s", (restaurant_id))
+                        "WHERE r.name = %s", (name))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -134,6 +134,26 @@ class db:
         deleted = cursor.rowcount
         cursor.close()
         return deleted
+
+    def addMenuItemToCart(self, cart_id, menu_item_id):  # in menu page the total am. needs to be calculated
+        cursor = self.conn.cursor(prepared=True)        # her bir menu item listeye eklenince tek tek kullanılmalı
+        cursor.execute(
+            "INSERT INTO contains (cart_id, menu_item_id) VALUES (%s, %s)",
+            (cart_id, menu_item_id)
+        )
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def removeMenuItemFromCart(self, cart_id, menu_item_id):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute(
+            "DELETE FROM contains WHERE cart_id = %s AND menu_item_id = %s",
+            (cart_id, menu_item_id)
+        )
+        data = cursor.fetchall()
+        cursor.close()
+        return data
 
 ############# Paying page Methods ######################
     def createDiscount(self,discount_id,menu_item_id, finis_date, amount):
