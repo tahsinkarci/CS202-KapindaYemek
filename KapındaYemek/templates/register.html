@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
+{% extends "index.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
     <h2>Register Page</h2>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -26,5 +25,4 @@
         <button type="submit">Register</button>
     </form>
     <a href="{{ url_for('login') }}">Back to Login</a>
-</body>
-</html>
+{% endblock %}
