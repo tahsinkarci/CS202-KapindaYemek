@@ -8,14 +8,17 @@ print("Connector is working!")
 app = Flask(__name__)
 app.secret_key = "asdasfamanasqwezayras"  # Add this line
 
-@app.route("/")
-def home():
-    conn = mysql.connector.connect(
+def get_db_connection():
+    return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="your_unique_db_pass",  # enter YOUR db password
+        password="your_unique_db_pass",
         database="project"
     )
+
+@app.route("/")
+def home():
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Customer")
     data = cursor.fetchall()
@@ -28,12 +31,7 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="your_unique_db_pass",
-            database="project"
-        )
+        conn = get_db_connection()
         cursor = conn.cursor()
         # first, check if the username exists
         cursor.execute("SELECT user_id, password FROM User WHERE username=%s", (username,))
@@ -77,12 +75,7 @@ def register():
 
                 
 
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="your_unique_db_pass",
-            database="project"
-        )
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         # Check if username already exists
@@ -95,12 +88,7 @@ def register():
                 if request.method == "POST":
                     username = request.form["username"]
                     password = request.form["password"]
-                    conn = mysql.connector.connect(
-                        host="localhost",
-                        user="root",
-                        password="your_unique_db_pass",
-                        database="project"
-                    )
+                    conn = get_db_connection()
                     cursor = conn.cursor()
                     # Check if the username exists
                     cursor.execute("SELECT user_id, password FROM User WHERE username=%s", (username,))
