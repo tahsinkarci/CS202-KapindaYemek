@@ -219,3 +219,25 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def deleteCheck(self, sale_id):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "DELETE FROM checks WHERE sale_id = %s"
+        cursor.execute(sql, (sale_id,))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+    def deleteSale(self, sale_id):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "DELETE FROM Sales WHERE sale_id = %s"
+        cursor.execute(sql, (sale_id,))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def getAllchecks(self):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute("SELECT * FROM checks")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
