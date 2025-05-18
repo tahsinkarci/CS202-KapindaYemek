@@ -4,15 +4,17 @@ from db import (
     get_last_user_id, username_exists, insert_user, insert_customer
 )
 from datetime import datetime
-print("Connector is working!")
 
+print("Connector is working!")
 
 app = Flask(__name__)
 app.secret_key = "asdasfamanasqwezayras"
 
+
 @app.route("/")
-def home():    
+def home():
     return render_template("home.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -24,20 +26,21 @@ def login():
         if not result:
             flash("Username not found. Please register first.")
             return render_template("login.html")
-        
-        #if result is not None:
+
+        # if result is not None:
         user_id, db_password = result
         if password == db_password:
             if is_manager(user_id):
-                #type = "manager"
-                return render_template("manager.html") #you can add type
+                # type = "manager"
+                return render_template("manager.html")  # you can add type
             else:
-                #type = "customer"
-                return render_template("restaurants.html") #you can add type
+                # type = "customer"
+                return render_template("restaurants.html")  # you can add type
         else:
             flash("Incorrect password.")
             return render_template("login.html")
     return render_template("login.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -55,16 +58,17 @@ def register():
         last_user_id = get_last_user_id()
         if last_user_id:
             last_num = int(last_user_id[1:])
-            user_id = f"U{last_num+1:03d}"
+            user_id = f"U{last_num + 1:03d}"
         else:
             user_id = "U001"
 
         insert_user(user_id, username, password, first_name, last_name)
         insert_customer(user_id)
         flash("Registration successful! Please log in.")
-        
+
         return redirect(url_for("login"))
     return render_template("register.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
