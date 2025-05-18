@@ -184,4 +184,38 @@ class db:
         cursor.close()
         return data
 
+    ##### sales page methods #####
 
+    def createSale(self, sale_id, status, price):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "INSERT INTO Sales(sale_id, cart_id, customer_id, restaurant_id, total_amount) " \
+              "VALUES (%s, %s, %s, %s, %s)"
+        cursor.execute(sql, (sale_id, cart_id, customer_id, restaurant_id, total_amount))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def getAllSales(self):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute("SELECT * FROM Sales")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def createPlacesRelation(self,sale_id, cart_id):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "INSERT INTO places(sale_id, cart_id) " \
+              "VALUES (%s, %s)"
+        cursor.execute(sql, (sale_id, cart_id))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def createCheck(self, sale_id, user_id):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "INSERT INTO checks(sale_id, user_id) " \
+              "VALUES (%s, %s)"
+        cursor.execute(sql, (sale_id, user_id))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
