@@ -35,9 +35,7 @@ nav a:hover {
     color: #ffd700;
 }
 
-nav a.home::before {
-    content: "🏠 ";
-}
+
 
 nav a.login::before {
     content: "🔑 ";

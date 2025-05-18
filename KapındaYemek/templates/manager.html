@@ -1,9 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manager Page</title>
-</head>
-<body>
+{% extends "index.html" %}
+
+{% block title %}Manager Page{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='manager.css') }}">
+{% endblock %}
+
+{% block content %}
     <h1>This is a manager page.</h1>
-</body>
-</html>
+{% endblock %}
