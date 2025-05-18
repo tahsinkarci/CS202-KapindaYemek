@@ -2,17 +2,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer List</title>
+    <title>{% block title %}Kapında Yemek{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
-    <h1>Customer Data</h1>
-    <ul>
-        {% for row in data %}
-            <li>{{ row }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('login') }}">
-        <button type="button">Login</button>
-    </a>
+    <!-- Header -->
+    <header>
+        <h1>Kapında Yemek</h1>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            
+        </nav>
+    </header>
+
+    <!-- Main content -->
+    <main>
+        {% block content %} 
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <hr>
+        <p>&copy; 2025 Kapında Yemek. All rights reserved.</p>
+    </footer>
 </body>
 </html>
