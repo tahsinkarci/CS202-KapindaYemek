@@ -54,10 +54,10 @@ class DB:
         cur.close()
         return row
 
-    def getMenuItemByID(self, id):
+    def getMenuItemByName(self, name):
         cur = self.conn.cursor(prepared=True)
-        sql = "SELECT name FROM MenuItem WHERE menu_item_id = %s"
-        cur.execute(sql, (id,))
+        sql = "SELECT id FROM MenuItem WHERE name = %s"
+        cur.execute(sql, (name,))
         row = cur.fetchone()
         cur.close()
         return row
