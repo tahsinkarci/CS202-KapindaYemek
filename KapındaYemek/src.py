@@ -7,12 +7,11 @@ print("Connector is working!")
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/")  # her page de güncellenmeli
 def home():
     connection = DB("#123321#%&", "homework")
 
-     #data = connection.getAllCustomer()
-    data = connection.getUsername("C1")
+    data = connection.getAllRestaurants()
 
 
     return render_template("index.html", data=data)
