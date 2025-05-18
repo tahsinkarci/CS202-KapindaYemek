@@ -5,7 +5,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="tHfB1848*D2#",
+        password="#123321#%&",
         database="project"
     )
 
@@ -94,3 +94,38 @@ def get_all_customers():
     conn.close()
     return data
 
+def listAllMenuItemsByIDOfRestaurant(self, restaurant_id): # workbenchte calısıo
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT m.name,m.price"
+                    "FROM restaurant r"
+                    "JOIN offers o ON r.restaurant_id = o.restaurant_id"
+                    "JOIN menuitem m ON o.menu_item_id  = m.menu_item_id"
+                    "WHERE r.restaurant_id = %s", (restaurant_id))
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return data
+
+def createCart(self, cart_id, status, total_amount):  # in menu page the total am. needs to be calculated
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Cart (cart_id, status, created_at, updated_at, total_amount)"
+                   " VALUES (%s, %s, %s,%s, %s)",
+        (cart_id, status, datetime.now(), datetime.now(), total_amount))
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return data
+
+def deleteCart(self, cart_id):
+    conn   = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "DELETE FROM Cart WHERE cart_id = %s",
+        (cart_id,)
+    )
+    deleted = cursor.rowcount
+    cursor.close()
+    conn.close()
+    return deleted
