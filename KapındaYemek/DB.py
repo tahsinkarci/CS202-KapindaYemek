@@ -35,10 +35,10 @@ class DB:
         cur.close()
         return [r[0] for r in rows]
 
-    def getRestaurantNameByID(self, id):
+    def getRestaurantByName(self, name):
         cur = self.conn.cursor(prepared=True)
-        sql = "SELECT name FROM Restaurant WHERE restaurant_id = %s"
-        cur.execute(sql, (id,))
+        sql = "SELECT id FROM Restaurant WHERE name = %s"
+        cur.execute(sql, (name,))
         row = cur.fetchone()
         cur.close()
         return row
