@@ -115,8 +115,8 @@ class db:
         cursor.close()
         return data
 
-    def createCart(self, cart_id, status, total_amount):  # in menu page the total am. needs to be calculated
-        cursor = self.conn.cursor(prepared=True)
+    def createCart(self, cart_id, status, total_amount):  # in menu page the total am. needs to be calculated,
+        cursor = self.conn.cursor(prepared=True)          # then cart has to be created
         cursor.execute("INSERT INTO Cart (cart_id, status, created_at, updated_at, total_amount)"
                        " VALUES (%s, %s, %s,%s, %s)",
             (cart_id, status, datetime.now(), datetime.now(), total_amount))
@@ -124,6 +124,16 @@ class db:
         cursor.close()
 
         return data
+
+    def updateCart(self, cart_id,  total_amount):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute(
+            "UPDATE Cart SET status = 'pending', updated_at = %s, total_amount = %s WHERE cart_id = %s",
+            ( datetime.now(), total_amount, cart_id)
+        )
+        updated = cursor.rowcount
+        cursor.close()
+        return updated
 
     def deleteCart(self, cart_id):
         cursor = self.conn.cursor(prepared=True)
