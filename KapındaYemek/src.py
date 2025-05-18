@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from db import (
-    get_all_customers, get_user_by_username, is_manager,
-    get_last_user_id, username_exists, insert_user, insert_customer
-)
+from db import db
 from datetime import datetime
 
 print("Connector is working!")
+
+## enter your db password here
+databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
+
 
 app = Flask(__name__)
 app.secret_key = "asdasfamanasqwezayras"
@@ -13,6 +14,7 @@ app.secret_key = "asdasfamanasqwezayras"
 
 @app.route("/")
 def home():
+
     return render_template("home.html")
 
 
@@ -21,7 +23,8 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        result = get_user_by_username(username)
+        result = databaseConnection.get_user_by_username(username)
+        userid = databaseConnection.getIDByUsername(username)  # keeps selected user id
 
         if not result:
             flash("Username not found. Please register first.")
@@ -30,7 +33,7 @@ def login():
         # if result is not None:
         user_id, db_password = result
         if password == db_password:
-            if is_manager(user_id):
+            if databaseConnection.is_manager(user_id):
                 # type = "manager"
                 return render_template("manager.html")  # you can add type
             else:
@@ -50,24 +53,31 @@ def register():
         first_name = request.form["name"]
         last_name = request.form["surname"]
 
-        if username_exists(username):
+        if databaseConnection.username_exists(username):
             flash("Username already exists. Please choose another one.")
             return render_template("register.html")
 
         # Generate a new user_id
-        last_user_id = get_last_user_id()
+        last_user_id = databaseConnection.get_last_user_id()
         if last_user_id:
             last_num = int(last_user_id[1:])
             user_id = f"U{last_num + 1:03d}"
         else:
             user_id = "U001"
 
-        insert_user(user_id, username, password, first_name, last_name)
-        insert_customer(user_id)
+        databaseConnection.insert_user(user_id, username, password, first_name, last_name)
+        databaseConnection.insert_customer(user_id)
         flash("Registration successful! Please log in.")
 
         return redirect(url_for("login"))
     return render_template("register.html")
+
+@app.route("/selectRestaurant", methods=["GET"])
+def selectRestaurant():
+    restaurant_list = databaseConnection.getAllRestaurants()
+    # print("🔍 got:", restaurant_list) --> to test via console
+    return render_template("restaurants.html", restaurant_names=restaurant_list)
+
 
 
 if __name__ == "__main__":
