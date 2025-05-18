@@ -202,6 +202,23 @@ class db:
         cursor.close()
         return data
 
+
+    def updateSale(self, sale_id, status):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "UPDATE Sales SET status = %s WHERE sale_id = %s"
+        cursor.execute(sql, (status, sale_id))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def deleteSale(self, sale_id):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "DELETE FROM Sales WHERE sale_id = %s"
+        cursor.execute(sql, (sale_id,))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
     def createPlacesRelation(self,sale_id, cart_id):
         cursor = self.conn.cursor(prepared=True)
         sql = "INSERT INTO places(sale_id, cart_id) " \
