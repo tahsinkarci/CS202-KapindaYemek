@@ -3,16 +3,24 @@
 {% block title %}Restaurant Select Page{% endblock %}
 
 {% block content %}
-    <p>Raw data: {{ raw }}</p>
-    <h1>This is a restaurant selection page.</h1>
+     <h1>This is a restaurant selection page.</h1>
 
-    <form action="{{ url_for('selectRestaurant') }}" method="get">
-        <label for="restaurant">Choose a restaurant:</label>
-        <select name="restaurant" id="restaurant">
-          {% for name in restaurant_names %}
-            <option value="{{ name }}">{{ name }}</option>
-          {% endfor %}
-        </select>
-        <button type="submit">Select Restaurant</button>
-    </form>
+  <form action="{{ url_for('selectRestaurant') }}" method="get">
+    <label for="restaurant">Choose a restaurant:</label>
+    <select name="restaurant" id="restaurant">
+      {% for name in restaurant_names %}
+        <option value="{{ name }}"
+          {% if name == selected %}selected{% endif %}>
+          {{ name }}
+        </option>
+      {% endfor %}
+    </select>
+    <button type="submit">Select Restaurant</button>
+  </form>
+
+  {% if selected %}
+    <hr>
+    <h2>You’ve selected:</h2>
+    <p><strong>{{ selected }}</strong></p>
+  {% endif %}
 {% endblock %}
