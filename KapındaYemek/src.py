@@ -35,10 +35,10 @@ def login():
         if password == db_password:
             if databaseConnection.is_manager(user_id):
                 # type = "manager"
-                return render_template("manager.html")  # you can add type
+                return redirect(url_for("manager"))  # you can add type
             else:
                 # type = "customer"
-                return render_template("restaurants.html")  # you can add type
+                return redirect(url_for("selectRestaurant"))  # you can add type
         else:
             flash("Incorrect password.")
             return render_template("login.html")
@@ -78,6 +78,34 @@ def selectRestaurant():
     # print("🔍 got:", restaurant_list) --> to test via console
     return render_template("restaurants.html", restaurant_names=restaurant_list)
 
+
+@app.route("/update_sale_status", methods=["POST"])
+def update_sale_status():
+
+    decision = request.form.get("decision")  # cancel sale , reopen sale, accept sale, reject sale
+
+    if decision == "Cancel Sale":
+        sale_id = request.form.get("sale_id")
+        databaseConnection.updateSale(sale_id, "cancelled")
+    elif decision == "Reopen Sale":
+         sale_id = request.form.get("sale_id")
+         databaseConnection.updateSale(sale_id, "reopened")
+    elif decision == "Accept":
+        sale_id = request.form.get("sale_id")
+        databaseConnection.updateSale(sale_id, "accepted")
+    elif decision == "Reject":
+        sale_id = request.form.get("sale_id")
+        databaseConnection.updateSale(sale_id, "rejected")
+
+    return redirect(url_for("manager"))
+
+
+
+@app.route("/manager", methods=["GET"])
+def manager():
+    sales_list = databaseConnection.getAllSales()
+    print("🔍 got:", sales_list) # --> to test via console
+    return render_template("manager.html", sales=sales_list)
 
 
 
