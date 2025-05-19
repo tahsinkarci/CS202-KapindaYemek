@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from db import db
 from datetime import datetime
 
@@ -32,6 +32,7 @@ def login():
 
         # if result is not None:
         user_id, db_password = result
+        session["user_id"] = user_id
         if password == db_password:
             if databaseConnection.is_manager(user_id):
                 # type = "manager"
@@ -103,8 +104,9 @@ def update_sale_status():
 
 @app.route("/manager", methods=["GET"])
 def manager():
-    sales_list = databaseConnection.getAllSales()
-    print("🔍 got:", sales_list) # --> to test via console
+    user_id = session.get("user_id") # get the user_id from login page
+    sales_list = databaseConnection.getRestaurantManagerByID(user_id)  # you can add user_id
+    # print("🔍 got:", sales_list) # --> to test via console
     return render_template("manager.html", sales=sales_list)
 
 
