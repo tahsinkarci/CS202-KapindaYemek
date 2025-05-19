@@ -197,9 +197,9 @@ class db:
 
     def getAllSales(self):
         cursor = self.conn.cursor(prepared=True)
-        cursor.execute("SELECT s.sale_id, s.price, s.status, m.date, m.user_id" \
-                        "FROM sales s" \
-                        "JOIN makes m ON s.sale_id = m.sale_id")
+        cursor.execute("SELECT s.sale_id, s.price, s.status, m.date, m.user_id "
+                       "FROM sales s "
+                       "JOIN makes m ON s.sale_id = m.sale_id")
         data = cursor.fetchall()
         cursor.close()
         return data
