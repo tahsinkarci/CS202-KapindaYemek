@@ -1,12 +1,53 @@
 {% extends "index.html" %}
 
-{% block title %}Manager Page{% endblock %}
-
-{% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='manager.css') }}">
-{% endblock %}
+{% block title %}Manager Dashboard{% endblock %}
 
 {% block content %}
-    <h1>This is a manager page.</h1>
+  <h1>Manager Dashboard</h1>
+
+  {% if sales %}
+  <ul>
+    {% for sale_id, price, status, date, user_id in sales %}
+      <li>
+        <strong>Sale ID:</strong> {{ sale_id }} &mdash;
+        <strong>Price:</strong> ${{ price }} &mdash;
+        <strong>Status:</strong> {{ status }} &mdash;
+        <strong>Date:</strong> {{ date }} &mdash;
+        <strong>User ID:</strong> {{ user_id }} &mdash;
+
+
+        {% if status == 'accepted' or status == 'refunded' %}
+          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+                <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+                <input type="hidden" name="decision"   value="Cancel Sale">
+              <button type="submit">Cancel Sale</button>
+          </form>
+        {% endif %}
+
+        {% if status == 'rejected' %}
+          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+              <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+              <input type="hidden" name="decision"   value="Reopen Sale">
+            <button type="submit">Reopen Sale</button>
+          </form>
+        {% endif %}
+
+        {% if status == 'pending' %}
+          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+              <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+              <input type="hidden" name="decision"   value="Accept">
+            <button type="submit">Accept</button>
+          </form>
+          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+                <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+                <input type="hidden" name="decision"   value="Reject">
+            <button type="submit">Reject</button>
+          </form>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No sales available.</p>
+{% endif %}
 {% endblock %}
