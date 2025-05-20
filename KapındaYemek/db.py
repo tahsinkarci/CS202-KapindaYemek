@@ -446,4 +446,11 @@ class db:
         cursor.execute(query, (user_id,))
         return cursor.fetchall()
 
+    def addApprove(self, cart_id, user_id):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO approves (user_id, cart_id) VALUES (%s, %s)"
+        cursor.execute(sql, (user_id, cart_id))
+        self.conn.commit()
+        cursor.close()
+
 
