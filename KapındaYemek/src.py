@@ -260,7 +260,9 @@ def define_discounts():
         flash("Discount created successfully.")
         return redirect(url_for("define_discounts"))
 
-    menu_items = databaseConnection.getAllMenuItems()
+    user_id = session.get("user_id")
+    menu_items = databaseConnection.getMenuItemsByManager(user_id)
+
     return render_template("discounts.html", menu_items=menu_items)
 
 
