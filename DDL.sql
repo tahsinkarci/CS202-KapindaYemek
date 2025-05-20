@@ -161,6 +161,13 @@ CREATE TABLE checks (
   FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE approves (
+	user_id VARCHAR(10),
+    cart_id VARCHAR(10),
+    PRIMARY KEY (user_id, cart_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (cart_id) REFERENCES Cart(cart_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 
 
