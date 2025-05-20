@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from db import db
 from datetime import datetime
+from uuid import uuid4
 
 print("Connector is working!")
 
@@ -131,8 +132,32 @@ def menu():
 
         # Approve cart
         elif action == "approve":
-            
-            flash("Cart approved!)")
+            total_amount = 0
+            for item in menu_list:
+                item_id_str = str(item[0])
+                if item_id_str in session["cart"]:
+                    quantity = session["cart"][item_id_str]
+                    total_amount += float(item[3]) * int(quantity)
+
+            # Generate a new cart_id like C001, C002, ...
+            last_cart_id = databaseConnection.get_last_cart_id()  #take the last cart id
+            if last_cart_id:
+                last_num = int(last_cart_id[1:])
+                cart_id = f"C{last_num + 1:03d}"
+            else:
+                cart_id = "C001"
+
+            databaseConnection.createCart(cart_id, "approved", total_amount)
+
+            # Add each menu item and its count to the cart
+            for item in menu_list:
+                item_id_str = str(item[0])
+                if item_id_str in session["cart"]:
+                    quantity = session["cart"][item_id_str]
+                    databaseConnection.addMenuItemToCart(cart_id, item_id_str, quantity)
+                    
+
+            flash(f"Cart approved! (Cart ID: {cart_id}, Total: ${total_amount})")
             session["cart"] = {}
 
         session.modified = True

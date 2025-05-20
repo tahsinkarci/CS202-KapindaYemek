@@ -136,6 +136,12 @@ class db:
         menu_items = cursor.fetchall()
         cursor.close()
         return menu_items
+    
+    def get_last_cart_id(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT cart_id FROM Cart ORDER BY cart_id DESC LIMIT 1")
+        result = cursor.fetchone()
+        return result[0] if result else None
 
     def createCart(self, cart_id, status, total_amount):  # in menu page the total am. needs to be calculated,
         cursor = self.conn.cursor(prepared=True)          # then cart has to be created
@@ -170,11 +176,11 @@ class db:
         cursor.close()
         return deleted
 
-    def addMenuItemToCart(self, cart_id, menu_item_id):  # in menu page the total am. needs to be calculated
+    def addMenuItemToCart(self, cart_id, menu_item_id, quantity):  # in menu page the total am. needs to be calculated
         cursor = self.conn.cursor(prepared=True)        # her bir menu item listeye eklenince tek tek kullanılmalı
         cursor.execute(
-            "INSERT INTO contains (cart_id, menu_item_id) VALUES (%s, %s)",
-            (cart_id, menu_item_id)
+            "INSERT INTO contains (cart_id, menu_item_id, quantity) VALUES (%s, %s, %s)",
+            (cart_id, menu_item_id,quantity)
         )
         self.conn.commit()
         data = cursor.fetchall()
@@ -314,4 +320,6 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+
 
