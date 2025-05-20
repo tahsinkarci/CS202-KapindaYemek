@@ -89,10 +89,12 @@ class db:
 
     def getRestaurantByName(self,name): # to get selected restaurant (when going next page)
         cursor = self.conn.cursor(prepared=True)
-        cursor.execute("SELECT restaurant_id FROM restaurant WHERE name=%s", (name,))
+        cursor.execute("SELECT restaurant_id "
+                       "FROM restaurant "
+                       "WHERE name=%s", (name,))
         result = cursor.fetchone()
         cursor.close()
-        return result
+        return result[0] if result else None  # just the ID, not a tuplereturn result
 
     def getAllRestaurants(self): # to list restaurant
         cursor = self.conn.cursor(prepared=True)
@@ -136,6 +138,20 @@ class db:
         menu_items = cursor.fetchall()
         cursor.close()
         return menu_items
+
+    def getLastCartID(self):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute("SELECT cart_id FROM Cart ORDER BY cart_id DESC LIMIT 1")
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+
+    def getLastSaleID(self):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute("SELECT sale_id FROM sales ORDER BY sale_id DESC LIMIT 1")
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
 
     def createCart(self, cart_id, status, total_amount):  # in menu page the total am. needs to be calculated,
         cursor = self.conn.cursor(prepared=True)          # then cart has to be created
@@ -217,9 +233,9 @@ class db:
 
     def createSale(self, sale_id, status, price):
         cursor = self.conn.cursor(prepared=True)
-        sql = "INSERT INTO Sales(sale_id, cart_id, customer_id, restaurant_id, total_amount) " \
-              "VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (sale_id, cart_id, customer_id, restaurant_id, total_amount))
+        sql = "INSERT INTO Sales(sale_id, status, price) " \
+              "VALUES (%s, %s, %s)"
+        cursor.execute(sql, (sale_id, status, price))
         self.conn.commit()
         data = cursor.fetchall()
         cursor.close()
@@ -268,6 +284,25 @@ class db:
         cursor.close()
         return data
 
+    def createReceivesRelation(self, cart_id, restaurant_id):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "INSERT INTO receives(cart_id, restaurant_id) " \
+              "VALUES (%s, %s)"
+        cursor.execute(sql, (cart_id, restaurant_id))
+        self.conn.commit()
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def createMakesRelation(self, sale_id, user_id, date=datetime.now()):
+        cursor = self.conn.cursor(prepared=True)
+        sql = "INSERT INTO makes(sale_id, user_id, date) " \
+              "VALUES (%s, %s, %s)"
+        cursor.execute(sql, (sale_id, user_id, date))
+        self.conn.commit()
+        data = cursor.fetchall()
+        cursor.close()
+        return data
     def createCheck(self, sale_id, user_id):
         cursor = self.conn.cursor(prepared=True)
         sql = "INSERT INTO checks(sale_id, user_id) " \
@@ -314,4 +349,14 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def getRestaurantManagerIDByName(self, namee):
+        cursor = self.conn.cursor(prepared=True)
+        cursor.execute("SELECT user_id FROM manages m "
+                       "JOIN restaurant r ON r.restaurant_id = m.restaurant_id "
+                       "WHERE r.name = %s", (namee,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+
 
