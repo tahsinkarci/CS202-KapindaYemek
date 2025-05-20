@@ -484,11 +484,18 @@ class db:
             FROM Sales s
             JOIN makes m ON s.sale_id = m.sale_id
             JOIN places p ON s.sale_id = p.sale_id
-            WHERE m.user_id = %s AND s.status IN ('paid', 'accepted', 'refunded', 'cancelled', 'closed')
+            WHERE m.user_id = %s AND s.status IN ('cancelled', 'closed')
             ORDER BY m.date DESC
         """, (user_id,))
         carts = cursor.fetchall()
         cursor.close()
         return carts
+
+    def get_cart_amount(self, cart_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT total_amount FROM Cart WHERE cart_id = %s", (cart_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else 0
 
 

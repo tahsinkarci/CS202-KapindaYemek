@@ -244,12 +244,24 @@ def pay():
         if selected_carts:
             for cart_id in selected_carts:
                 databaseConnection.update_cart_status(cart_id, "pending")
+                last_sale_id = databaseConnection.getLastSaleID()
+                if last_sale_id:
+                    last_num = int(last_sale_id[1:])  # skip the 'S' prefix
+                    new_sale_id = f"S{last_num + 1:03d}"
+                else:
+                    new_sale_id = "S001"
+                databaseConnection.createSale(new_sale_id, "pending", databaseConnection.get_cart_amount(cart_id))  # create a new sale with status 'pending' and amount 0
+
+
+
+
             flash(f"{len(selected_carts)} cart(s) marked as pending.")
         else:
             flash("No carts selected.")
         return redirect(url_for("pay"))
     
-    databaseConnection.createSale() 
+    
+    
 
     approved_carts = databaseConnection.get_approved_carts_by_user(user_id)
     pending_orders = databaseConnection.get_paid_carts_by_user(user_id)
