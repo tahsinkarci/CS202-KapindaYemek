@@ -146,6 +146,16 @@ class db:
         cursor.close()
         return result[0] if result else None
 
+    def get_last_cart_id(self):
+        """
+        Returns the last (highest) cart_id from the Cart table, or None if no carts exist.
+        """
+        cursor = self.conn.cursor()
+        query = "SELECT cart_id FROM Cart ORDER BY cart_id DESC LIMIT 1"
+        cursor.execute(query)
+        result = cursor.fetchone()
+        return result[0] if result else None
+
     def getLastSaleID(self):
         cursor = self.conn.cursor(prepared=True)
         cursor.execute("SELECT sale_id FROM sales ORDER BY sale_id DESC LIMIT 1")
