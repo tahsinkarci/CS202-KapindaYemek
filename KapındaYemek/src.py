@@ -5,7 +5,7 @@ from datetime import datetime
 print("Connector is working!")
 
 ## enter your db password here
-databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
+databaseConnection = db("tHfB1848*D2#", "project")  # the constructor itself creates connection
 
 
 app = Flask(__name__)
@@ -73,11 +73,22 @@ def register():
         return redirect(url_for("login"))
     return render_template("register.html")
 
-@app.route("/selectRestaurant", methods=["GET"])
+@app.route("/selectRestaurant", methods=["GET", "POST"])
 def selectRestaurant():
+    if request.method == "POST":
+        selected_restaurant = request.form.get("restaurant")
+        flash(f"You selected: {selected_restaurant}")
+        # You can redirect to another page or process the selection here
+        return redirect(url_for("menu", restaurant_name=selected_restaurant))
+
+    #then it is get
     restaurant_list = databaseConnection.getAllRestaurants()
-    # print("🔍 got:", restaurant_list) --> to test via console
     return render_template("restaurants.html", restaurant_names=restaurant_list)
+
+
+@app.route("/menu.html")
+def menu():
+    return render_template("menu.html")
 
 
 @app.route("/update_sale_status", methods=["POST"])
@@ -104,11 +115,25 @@ def update_sale_status():
 
 @app.route("/manager", methods=["GET"])
 def manager():
-    user_id = session.get("user_id") # get the user_id from login page
-    sales_list = databaseConnection.getRestaurantManagerByID(user_id)  # you can add user_id
-    # print("🔍 got:", sales_list) # --> to test via console
-    return render_template("manager.html", sales=sales_list)
+    user_id = session.get("user_id")  # get the user_id from login page
+    sales_list = databaseConnection.getRestaurantManagerByID(user_id)
 
+    #total sales
+    total_sales = sum(sale[1] for sale in sales_list) if sales_list else 0  #sale[1] is the amount
+
+    #calculate monthly sales as well
+    now = datetime.now()
+    monthly_sales = sum(
+        sale[1] for sale in sales_list
+        if sale[3].month == now.month and sale[3].year == now.year #check the time of the sale, sale[3] is the date
+    ) if sales_list else 0  
+
+    return render_template(
+        "manager.html",
+        sales=sales_list,
+        total_sales=total_sales,
+        monthly_sales=monthly_sales
+    )
 
 
 if __name__ == "__main__":
