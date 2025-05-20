@@ -42,7 +42,7 @@ INSERT INTO Restaurant VALUES
 ('R002', 'HD İskender', '456 Water Ave', 'Seaville', 'ocean@bites.com', '555-5678', 'Seafood'),
 ('R003', 'Sushico', '789 Noodle Rd', 'Pastaville', 'pasta@place.com', '555-9012', 'Italian'),
 ('R004', 'Pizza Bulls', '101 Beef Blvd', 'BurgerCity', 'barn@burger.com', '555-3456', 'Fast Food'),
-('R005', 'Green Salas', '202 Vegan St', 'Greenville', 'leaf@green.com', '555-7890', 'Vegan');
+('R005', 'Green Salad', '202 Vegan St', 'Greenville', 'leaf@green.com', '555-7890', 'Vegan');
 
 -- MenuItem Table
 INSERT INTO MenuItem VALUES
