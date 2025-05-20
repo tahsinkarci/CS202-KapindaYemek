@@ -421,4 +421,19 @@ class db:
         """, (user_id,))
         return cur.fetchall()
 
+    def get_approved_carts_by_user(self, user_id):
+        """
+        Returns a list of approved carts for the given user_id.
+        Each cart is a tuple: (cart_id, status, total_amount, ...)
+        """
+        cursor = self.conn.cursor()
+        query = """
+            SELECT c.cart_id, c.status, c.total_amount
+            FROM Cart c
+            JOIN Approves a ON c.cart_id = a.cart_id
+            WHERE a.user_id = %s AND c.status = 'approved'
+        """
+        cursor.execute(query, (user_id,))
+        return cursor.fetchall()
+
 
