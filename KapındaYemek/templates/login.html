@@ -18,11 +18,13 @@
         <input type="text" id="username" name="username" required><br><br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
+        <div class="login-buttons">
+            <button type="submit">Login</button>
+            <a href="{{ url_for('register') }}">
+                <button type="button">Register</button>
+            </a>
+        </div>
     </form>
-    <a href="{{ url_for('register') }}">
-        <button type="button">Register</button>
-    </a>
     <br>
     <a href="{{ url_for('home') }}">Back to Home</a>
 {% endblock %}
