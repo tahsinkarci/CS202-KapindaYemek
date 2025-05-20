@@ -29,4 +29,46 @@
     {% else %}
         <p>You have no approved carts.</p>
     {% endif %}
+
+    <h2>Your Paid Orders</h2>
+    {% if paid_orders %}
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Total Amount</th>
+                <th>Date</th>
+            </tr>
+            {% for order in paid_orders %}
+            <tr>
+                <td>{{ order[0] }}</td>
+                <td>${{ order[1] }}</td>
+                <td>{{ order[2] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You have no paid orders.</p>
+    {% endif %}
+
+    <h2>Your Past Orders</h2>
+    {% if past_orders %}
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Total Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+            {% for order in past_orders %}
+            <tr>
+                <td>{{ order[0] }}</td>
+                <td>${{ order[1] }}</td>
+                <td>{{ order[2] }}</td>
+                <td>{{ order[3] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You have no past orders.</p>
+    {% endif %}
 {% endblock %}
