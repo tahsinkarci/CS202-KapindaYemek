@@ -123,6 +123,7 @@ CREATE TABLE places (
 CREATE TABLE contains (
   cart_id       VARCHAR(10),
   menu_item_id  VARCHAR(10),
+  quantity INT,
   PRIMARY KEY (cart_id, menu_item_id),
   FOREIGN KEY (cart_id) REFERENCES Cart(cart_id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (menu_item_id) REFERENCES MenuItem(menu_item_id) ON DELETE CASCADE ON UPDATE CASCADE
