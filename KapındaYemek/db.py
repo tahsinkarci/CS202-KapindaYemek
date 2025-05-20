@@ -165,6 +165,12 @@ class db:
         cursor.close()
         return updated
 
+    def update_cart_status(self, cart_id, status):
+        cursor = self.conn.cursor()
+        cursor.execute("UPDATE Cart SET status = %s WHERE cart_id = %s", (status, cart_id))
+        self.conn.commit()
+        cursor.close()
+
     def deleteCart(self, cart_id):
         cursor = self.conn.cursor(prepared=True)
         cursor.execute(
@@ -225,7 +231,7 @@ class db:
         cursor = self.conn.cursor(prepared=True)
         sql = "INSERT INTO Sales(sale_id, cart_id, customer_id, restaurant_id, total_amount) " \
               "VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (sale_id, cart_id, customer_id, restaurant_id, total_amount))
+        cursor.execute(sql, (sale_id, status, price))
         self.conn.commit()
         data = cursor.fetchall()
         cursor.close()
@@ -320,6 +326,36 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def get_last_sale_id(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT sale_id FROM Sales ORDER BY sale_id DESC LIMIT 1")
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+
+    def get_approved_carts_by_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT c.cart_id, c.total_amount, c.created_at
+            FROM Cart c
+            JOIN Approves a ON c.cart_id = a.cart_id
+            WHERE a.user_id = %s AND c.status = 'approved'
+            ORDER BY c.created_at DESC
+        """, (user_id,))
+        print(user_id)
+        carts = cursor.fetchall()
+        cursor.close()
+        return carts
+
+    def addApprove(self, cart_id, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "INSERT INTO Approves (user_id, cart_id) VALUES (%s, %s)",
+            (user_id, cart_id)
+        )
+        self.conn.commit()
+        cursor.close()
 
 
 

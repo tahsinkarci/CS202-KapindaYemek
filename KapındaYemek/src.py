@@ -114,23 +114,23 @@ def menu():
                     session["cart"][item_id] = 1
             flash("Selected items added to cart.")
 
-        # Delete selected items from cart
+        #delete selected items from cart
         elif action == "delete":
             for item_id in selected_items:
                 session["cart"].pop(item_id, None)
             flash("Selected items removed from cart.")
 
-        # Increment item count
+        #increment item count
         elif action == "plus" and item_id:
             if item_id in session["cart"]:
                 session["cart"][item_id] += 1
 
-        # Decrement item count (minimum 1)
+        #decrement item count, min. 1
         elif action == "minus" and item_id:
             if item_id in session["cart"] and session["cart"][item_id] > 1:
                 session["cart"][item_id] -= 1
 
-        # Approve cart
+        #approve cart
         elif action == "approve":
             total_amount = 0
             for item in menu_list:
@@ -149,16 +149,22 @@ def menu():
 
             databaseConnection.createCart(cart_id, "approved", total_amount)
 
-            # Add each menu item and its count to the cart
+            #add each menu item and its count to the cart
             for item in menu_list:
                 item_id_str = str(item[0])
                 if item_id_str in session["cart"]:
                     quantity = session["cart"][item_id_str]
-                    databaseConnection.addMenuItemToCart(cart_id, item_id_str, quantity)
-                    
+                    databaseConnection.addMenuItemToCart(cart_id, item_id_str, quantity) #add menu cart relationship
+
+            # Add Approves record
+            user_id = session.get("user_id")
+            databaseConnection.addApprove(cart_id, user_id)
 
             flash(f"Cart approved! (Cart ID: {cart_id}, Total: ${total_amount})")
             session["cart"] = {}
+
+            session.modified = True
+            return redirect(url_for("pay"))  # Redirect to pay.html
 
         session.modified = True
 
@@ -224,6 +230,21 @@ def manager():
         monthly_sales=monthly_sales
     )
 
+@app.route("/pay", methods=["GET", "POST"])
+def pay():
+    user_id = session.get("user_id")
+    if request.method == "POST":
+        selected_carts = request.form.getlist("selected_carts")
+        if selected_carts:
+            for cart_id in selected_carts:
+                databaseConnection.update_cart_status(cart_id, "paid")
+            flash(f"{len(selected_carts)} cart(s) marked as paid.")
+        else:
+            flash("No carts selected.")
+        return redirect(url_for("pay"))
+
+    approved_carts = databaseConnection.get_approved_carts_by_user(user_id)
+    return render_template("pay.html", carts=approved_carts)
 
 if __name__ == "__main__":
     app.run(debug=True)
