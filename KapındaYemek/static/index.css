@@ -44,6 +44,10 @@ nav a.login::before {
 main {
     padding: 40px 20px;
     min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 button {
