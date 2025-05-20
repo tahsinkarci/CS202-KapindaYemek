@@ -346,7 +346,7 @@ class db:
 
     def getRestaurantManagerByID(self, user_id):
         cursor = self.conn.cursor(prepared=True)
-        cursor.execute("SELECT s.sale_id, s.price, s.status, m.date "
+        cursor.execute("SELECT  DISTINCT  s.sale_id, s.price, s.status, m.date "
                        "FROM sales s "
                        "JOIN makes m ON s.sale_id = m.sale_id "
                        "JOIN checks c ON s.sale_id = c.sale_id "
