@@ -106,11 +106,11 @@ class db:
     #o restaurant in bütün menuitemlerini {name, price} şeklinde döndürür
     def listAllMenuItemsByNameOfRestaurantWithPrice(self, name): # workbenchte calısıo
         cursor = self.conn.cursor(prepared=True)
-        cursor.execute("SELECT m.name,m.price"
-                        "FROM restaurant r"
-                        "JOIN offers o ON r.restaurant_id = o.restaurant_id"
-                        "JOIN menuitem m ON o.menu_item_id  = m.menu_item_id"
-                        "WHERE r.name = %s", (name))
+        cursor.execute("SELECT m.name,m.price "
+                       "FROM restaurant r "
+                       "JOIN offers o ON r.restaurant_id = o.restaurant_id "
+                       "JOIN menuitem m ON o.menu_item_id  = m.menu_item_id "
+                       "WHERE r.name = %s", (name))
         self.conn.commit()
         data = cursor.fetchall()
         cursor.close()
