@@ -175,6 +175,12 @@ class db:
         cursor.close()
         return updated
 
+    def update_cart_status(self, cart_id, status):
+        cursor = self.conn.cursor()
+        cursor.execute("UPDATE Cart SET status = %s WHERE cart_id = %s", (status, cart_id))
+        self.conn.commit()
+        cursor.close()
+
     def deleteCart(self, cart_id):
         cursor = self.conn.cursor(prepared=True)
         cursor.execute(
