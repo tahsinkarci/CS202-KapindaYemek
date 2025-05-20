@@ -111,11 +111,12 @@ INSERT INTO places VALUES
 
 -- contains Table
 INSERT INTO contains VALUES
-('C001', 'M001'),
-('C002', 'M002'),
-('C003', 'M003'),
-('C004', 'M004'),
-('C005', 'M005');
+('C001', 'M001', 3),
+('C002', 'M002', 2),
+('C003', 'M003', 1),
+('C004', 'M004', 4),
+('C005', 'M005', 5);
+
 
 -- offers Table
 INSERT INTO offers VALUES
