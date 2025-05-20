@@ -72,35 +72,3 @@
         <p>You have no past orders.</p>
     {% endif %}
 {% endblock %}
-{% extends "index.html" %}
-
-{% block title %}Your Approved Carts{% endblock %}
-
-{% block content %}
-    <h1>Your Approved Carts</h1>
-    {% if carts %}
-        <form method="post" action="{{ url_for('pay') }}">
-            <table>
-                <tr>
-                    <th>Select</th>
-                    <th>Cart ID</th>
-                    <th>Total Amount</th>
-                    <th>Date</th>
-                </tr>
-                {% for cart in carts %}
-                <tr>
-                    <td>
-                        <input type="checkbox" name="selected_carts" value="{{ cart[0] }}">
-                    </td>
-                    <td>{{ cart[0] }}</td>
-                    <td>${{ cart[1] }}</td>
-                    <td>{{ cart[2] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <button type="submit" name="action" value="pay_selected">Pay Selected</button>
-        </form>
-    {% else %}
-        <p>You have no approved carts.</p>
-    {% endif %}
-{% endblock %}

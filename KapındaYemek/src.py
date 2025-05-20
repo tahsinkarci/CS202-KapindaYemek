@@ -6,6 +6,7 @@ print("Connector is working!")
 
 ## enter your db password here
 databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
+databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
 
 
 app = Flask(__name__)
@@ -215,11 +216,14 @@ def manager():
     #total sales
     total_sales = sum(sale[1] for sale in sales_list
                       if sale[1] is not None ) if sales_list else 0  #sale[1] is the amount
+    total_sales = sum(sale[1] for sale in sales_list
+                      if sale[1] is not None ) if sales_list else 0  #sale[1] is the amount
 
     #calculate monthly sales as well
     now = datetime.now()
     monthly_sales = sum(
         sale[1] for sale in sales_list
+        if sale[1] is not None
         if sale[1] is not None
         if sale[3].month == now.month and sale[3].year == now.year #check the time of the sale, sale[3] is the date
     ) if sales_list else 0  
@@ -246,26 +250,6 @@ def pay():
 
     approved_carts = databaseConnection.get_approved_carts_by_user(user_id)
     return render_template("pay.html", carts=approved_carts)
-
-
-@app.route("/manager/discounts", methods=["GET", "POST"])
-def define_discounts():
-    if request.method == "POST":
-        menu_item_id = request.form["menu_item_id"]
-        amount = request.form["amount"]
-        start_date = request.form["start_date"]
-        finish_date = request.form["finish_date"]
-
-        databaseConnection.create_discount(menu_item_id, amount, start_date, finish_date)
-        flash("Discount created successfully.")
-        return redirect(url_for("define_discounts"))
-
-    user_id = session.get("user_id")
-    menu_items = databaseConnection.getMenuItemsByManager(user_id)
-
-    return render_template("discounts.html", menu_items=menu_items)
-
-
 
 
 @app.route("/manager/discounts", methods=["GET", "POST"])
