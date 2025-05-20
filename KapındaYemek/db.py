@@ -192,11 +192,11 @@ class db:
         cursor.close()
         return deleted
 
-    def addMenuItemToCart(self, cart_id, menu_item_id, quantity):  # in menu page the total am. needs to be calculated
+    def addMenuItemToCart(self, cart_id, menu_item_id):  # in menu page the total am. needs to be calculated
         cursor = self.conn.cursor(prepared=True)        # her bir menu item listeye eklenince tek tek kullanılmalı
         cursor.execute(
-            "INSERT INTO contains (cart_id, menu_item_id, quantity) VALUES (%s, %s, %s)",
-            (cart_id, menu_item_id,quantity)
+            "INSERT INTO contains (cart_id, menu_item_id) VALUES (%s, %s)",
+            (cart_id, menu_item_id)
         )
         self.conn.commit()
         data = cursor.fetchall()

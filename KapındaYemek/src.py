@@ -6,6 +6,7 @@ print("Connector is working!")
 
 ## enter your db password here
 databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
+databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
 
 
 app = Flask(__name__)
@@ -215,11 +216,14 @@ def manager():
     #total sales
     total_sales = sum(sale[1] for sale in sales_list
                       if sale[1] is not None ) if sales_list else 0  #sale[1] is the amount
+    total_sales = sum(sale[1] for sale in sales_list
+                      if sale[1] is not None ) if sales_list else 0  #sale[1] is the amount
 
     #calculate monthly sales as well
     now = datetime.now()
     monthly_sales = sum(
         sale[1] for sale in sales_list
+        if sale[1] is not None
         if sale[1] is not None
         if sale[3].month == now.month and sale[3].year == now.year #check the time of the sale, sale[3] is the date
     ) if sales_list else 0  
