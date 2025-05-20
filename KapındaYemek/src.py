@@ -5,8 +5,7 @@ from datetime import datetime
 print("Connector is working!")
 
 ## enter your db password here
-databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
-databaseConnection = db("#123321#%&", "project")  # the constructor itself creates connection
+databaseConnection = db("tHfB1848*D2#", "project")  # the constructor itself creates connection
 
 
 app = Flask(__name__)
