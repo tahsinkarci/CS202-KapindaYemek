@@ -516,4 +516,41 @@ class db:
         cursor.close()
         return result[0] if result else 0
 
+    def add_rating(self, rating_id, rating, comment, restaurant_id):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO rating (rating_id, star, comment, restaurant_id) VALUES (%s, %s, %s, %s)"
+        cursor.execute(sql, (rating_id, rating, comment, restaurant_id))
+        self.conn.commit()
+        cursor.close()
+
+    def create_leaves_relation(self, rating_id, user_id):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO leaves (rating_id, user_id) VALUES (%s, %s)"
+        cursor.execute(sql, (rating_id, user_id))
+        self.conn.commit()
+        cursor.close()
+
+    def get_latest_rating_id(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT rating_id FROM rating ORDER BY rating_id DESC LIMIT 1")
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+
+    def getRestaurantIDByCartID(self, cart_id):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT r.restaurant_id
+            FROM Cart c
+            JOIN contains co ON c.cart_id = co.cart_id
+            JOIN MenuItem m ON co.menu_item_id = m.menu_item_id
+            JOIN offers o ON m.menu_item_id = o.menu_item_id
+            JOIN Restaurant r ON o.restaurant_id = r.restaurant_id
+            WHERE c.cart_id = %s
+            LIMIT 1
+        """, (cart_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
+
 

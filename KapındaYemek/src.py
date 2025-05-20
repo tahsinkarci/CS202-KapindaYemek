@@ -240,6 +240,36 @@ def manager():
 def pay():
     user_id = session.get("user_id")
     if request.method == "POST":
+        if request.form.get("action") == "send_comment":
+            cart_id = request.form.get("comment_cart_id")
+            user_id = session.get("user_id")
+            rating = request.form.get(f"rating_{cart_id}")
+            comment = request.form.get(f"comment_{cart_id}")
+            if cart_id and user_id and rating:
+                # Generate a new rating_id like R001, R002, ...
+                last_rating_id = databaseConnection.get_latest_rating_id()
+                if last_rating_id:
+                    last_num = int(last_rating_id[2:])
+                    new_rating_id = f"RA{last_num + 1:03d}"
+                else:
+                    new_rating_id = "RA001"
+
+
+                restaurant_id = databaseConnection.getRestaurantIDByCartID(cart_id) 
+                
+                databaseConnection.add_rating(new_rating_id, int(rating), comment, restaurant_id)
+                #update the status as "commented"
+                
+                databaseConnection.update_cart_status(cart_id, "commented")
+                
+
+                databaseConnection.create_leaves_relation(new_rating_id, user_id)  # create a new relation
+
+                flash("Your rating and comment have been submitted.")
+            else:
+                flash("Please select a rating and enter a comment.")
+            return redirect(url_for("pay"))
+
         selected_carts = request.form.getlist("selected_carts")
         if selected_carts:
             for cart_id in selected_carts:

@@ -54,6 +54,7 @@
                         <td>{{ order[2] }}</td>
                         <td>{{ order[3] }}</td>
                     </tr>
+                    {% if order[3] != 'commented' %}
                     <tr>
                         <td colspan="4">
                             <form method="post" action="{{ url_for('pay') }}">
@@ -70,6 +71,7 @@
                             </form>
                         </td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                 </table>
             {% else %}
