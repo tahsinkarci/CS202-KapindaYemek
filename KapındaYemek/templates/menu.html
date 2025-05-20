@@ -47,7 +47,10 @@
                 {% if cart %}
                     <form id="cart-form" method="post" action="{{ url_for('menu') }}">
                         <ul>
+                            {% set ns = namespace(total=0) %}
                             {% for cart_item in cart %}
+                                {% set item_total = cart_item[4] * cart_item[3] %}
+                                {% set ns.total = ns.total + item_total %}
                                 <li>
                                     <input type="checkbox" name="selected_items" value="{{ cart_item[0] }}" id="cart-item-{{ cart_item[0] }}">
                                     <label for="cart-item-{{ cart_item[0] }}">
@@ -64,9 +67,13 @@
                                             +
                                         </button>
                                     </div>
+                                    <span>Item Total: ${{ item_total }}</span>
                                 </li>
                             {% endfor %}
                         </ul>
+                        <div class="cart-total">
+                            <strong>Total Amount: ${{ ns.total }}</strong>
+                        </div>
                         <button type="submit" name="action" value="delete">Delete Selected from Cart</button>
                     </form>
                 {% else %}

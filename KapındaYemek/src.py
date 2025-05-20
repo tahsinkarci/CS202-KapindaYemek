@@ -17,7 +17,7 @@ def home():
 
     return render_template("home.html")
 
-
+#LOGIN PAGE################################################################################
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -45,7 +45,7 @@ def login():
             return render_template("login.html")
     return render_template("login.html")
 
-
+#REGISTER PAGE################################################################################
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -72,7 +72,7 @@ def register():
 
         return redirect(url_for("login"))
     return render_template("register.html")
-
+#RESTAURANT PAGE################################################################################
 @app.route("/selectRestaurant", methods=["GET", "POST"])
 def selectRestaurant():
     if request.method == "POST":
@@ -85,7 +85,7 @@ def selectRestaurant():
     restaurant_list = databaseConnection.getAllRestaurants()
     return render_template("restaurants.html", restaurant_names=restaurant_list)
 
-
+#MENU PAGE################################################################################
 @app.route("/menu.html", methods=["GET", "POST"])
 def menu():
     restaurant_name = request.args.get("restaurant_name") or session.get("restaurant_name")
@@ -97,16 +97,16 @@ def menu():
 
     menu_list = databaseConnection.getMenuByRestaurantName(restaurant_name)
 
-    # Initialize cart in session if not present
+    #initialize cart if there is not
     if "cart" not in session or not isinstance(session["cart"], dict):
         session["cart"] = {}
 
     if request.method == "POST":
         action = request.form.get("action")
         selected_items = request.form.getlist("selected_items")
-        item_id = request.form.get("item_id")  # For plus/minus
+        item_id = request.form.get("item_id")  # for plus/minus
 
-        # Add selected items from menu to cart
+        #add selected items from menu to cart
         if action == "add":
             for item_id in selected_items:
                 if item_id not in session["cart"]:
@@ -131,7 +131,8 @@ def menu():
 
         # Approve cart
         elif action == "approve":
-            flash("Cart approved! (You can implement order logic here.)")
+            
+            flash("Cart approved!)")
             session["cart"] = {}
 
         session.modified = True
@@ -139,10 +140,12 @@ def menu():
     # Prepare cart items to display
     cart_items = []
     if session.get("cart"):
-        cart_items = [
-            (item[0], item[1], item[2], item[3], session["cart"].get(str(item[0]), 1))
-            for item in menu_list if str(item[0]) in session["cart"]
-        ]
+        for item in menu_list:
+            item_id = str(item[0])
+            if item_id in session["cart"]:
+                quantity = session["cart"][item_id]
+                # item = (id, name, desc, price)
+                cart_items.append((item[0], item[1], item[2], float(item[3]), int(quantity)))
 
     return render_template(
         "menu.html",
@@ -151,7 +154,7 @@ def menu():
         cart=cart_items
     )
 
-
+#SALE PAGE################################################################################
 @app.route("/update_sale_status", methods=["POST"])
 def update_sale_status():
 
