@@ -113,57 +113,27 @@ def menu():
                     session["cart"][item_id] = 1
             flash("Selected items added to cart.")
 
-        #delete selected items from cart
+        # Delete selected items from cart
         elif action == "delete":
             for item_id in selected_items:
                 session["cart"].pop(item_id, None)
             flash("Selected items removed from cart.")
 
-        #increment item count
+        # Increment item count
         elif action == "plus" and item_id:
             if item_id in session["cart"]:
                 session["cart"][item_id] += 1
 
-        #decrement item count, min. 1
+        # Decrement item count (minimum 1)
         elif action == "minus" and item_id:
             if item_id in session["cart"] and session["cart"][item_id] > 1:
                 session["cart"][item_id] -= 1
 
-        #approve cart
+        # Approve cart
         elif action == "approve":
-            total_amount = 0
-            for item in menu_list:
-                item_id_str = str(item[0])
-                if item_id_str in session["cart"]:
-                    quantity = session["cart"][item_id_str]
-                    total_amount += float(item[3]) * int(quantity)
-
-            # Generate a new cart_id like C001, C002, ...
-            last_cart_id = databaseConnection.get_last_cart_id()  #take the last cart id
-            if last_cart_id:
-                last_num = int(last_cart_id[1:])
-                cart_id = f"C{last_num + 1:03d}"
-            else:
-                cart_id = "C001"
-
-            databaseConnection.createCart(cart_id, "approved", total_amount)
-
-            #add each menu item and its count to the cart
-            for item in menu_list:
-                item_id_str = str(item[0])
-                if item_id_str in session["cart"]:
-                    quantity = session["cart"][item_id_str]
-                    databaseConnection.addMenuItemToCart(cart_id, item_id_str, quantity) #add menu cart relationship
-
-            # Add Approves record
-            user_id = session.get("user_id")
-            databaseConnection.addApprove(cart_id, user_id)
-
-            flash(f"Cart approved! (Cart ID: {cart_id}, Total: ${total_amount})")
+            
+            flash("Cart approved!)")
             session["cart"] = {}
-
-            session.modified = True
-            return redirect(url_for("pay"))  # Redirect to pay.html
 
         session.modified = True
 
@@ -231,21 +201,26 @@ def manager():
         monthly_sales=monthly_sales
     )
 
-@app.route("/pay", methods=["GET", "POST"])
-def pay():
-    user_id = session.get("user_id")
-    if request.method == "POST":
-        selected_carts = request.form.getlist("selected_carts")
-        if selected_carts:
-            for cart_id in selected_carts:
-                databaseConnection.update_cart_status(cart_id, "paid")
-            flash(f"{len(selected_carts)} cart(s) marked as paid.")
-        else:
-            flash("No carts selected.")
-        return redirect(url_for("pay"))
 
-    approved_carts = databaseConnection.get_approved_carts_by_user(user_id)
-    return render_template("pay.html", carts=approved_carts)
+
+@app.route("/manager/discounts", methods=["GET", "POST"])
+def define_discounts():
+    if request.method == "POST":
+        menu_item_id = request.form["menu_item_id"]
+        amount = request.form["amount"]
+        start_date = request.form["start_date"]
+        finish_date = request.form["finish_date"]
+
+        databaseConnection.create_discount(menu_item_id, amount, start_date, finish_date)
+        flash("Discount created successfully.")
+        return redirect(url_for("define_discounts"))
+
+    user_id = session.get("user_id")
+    menu_items = databaseConnection.getMenuItemsByManager(user_id)
+
+    return render_template("discounts.html", menu_items=menu_items)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

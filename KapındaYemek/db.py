@@ -387,4 +387,38 @@ class db:
         cur.execute("SELECT menu_item_id, name FROM MenuItem")
         return cur.fetchall()
 
+    def getMenuWithDiscounts(self, restaurant_name):
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT 
+                m.menu_item_id,
+                m.name,
+                m.description,
+                m.price,
+                d.amount,
+                d.start_date,
+                d.finish_date
+            FROM MenuItem m
+            JOIN offers o ON o.menu_item_id = m.menu_item_id
+            JOIN Restaurant r ON r.restaurant_id = o.restaurant_id
+            LEFT JOIN Discount d
+                ON d.menu_item_id = m.menu_item_id
+               AND d.start_date <= NOW()
+               AND d.finish_date >= NOW()
+            WHERE r.name = %s
+        """, (restaurant_name,))
+        return cur.fetchall()
+
+    def getMenuItemsByManager(self, user_id):
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT m.menu_item_id, m.name
+            FROM MenuItem m
+            JOIN offers o        ON o.menu_item_id = m.menu_item_id
+            JOIN Restaurant r    ON r.restaurant_id = o.restaurant_id
+            JOIN Manages mg      ON mg.restaurant_id = r.restaurant_id
+            WHERE mg.user_id = %s
+        """, (user_id,))
+        return cur.fetchall()
+
 
