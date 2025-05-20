@@ -288,6 +288,7 @@ class db:
                        "FROM sales s "
                        "JOIN makes m ON s.sale_id = m.sale_id "
                        "JOIN checks c ON s.sale_id = c.sale_id "
+                       "JOIN manages ma ON c.user_id = ma.user_id "
                        "WHERE c.user_id = %s ORDER BY s.sale_id", (user_id,))
         data = cursor.fetchall()
         cursor.close()
