@@ -30,7 +30,14 @@
                             <label for="item-{{ item[0] }}">
                                 <strong>{{ item[1] }}</strong><br>
                                 {{ item[2] }}<br>
-                                <span>Price: ${{ item[3] }}</span>
+                                {% if item[4] %}
+                                    {% set discount_price = item[3] * (1 - item[4] / 100) %}
+                                        <span style="text-decoration: line-through;">Price: ${{ item[3] }}</span><br>
+                                        <span style="color: green;"><strong>Discounted: ${{ "%.2f"|format(discount_price) }} (-{{ item[4] }}%)</strong></span>
+                                {% else %}
+                                    <span>Price: ${{ item[3] }}</span>
+                                {% endif %}
+
                             </label>
                         </li>
                     {% endfor %}
