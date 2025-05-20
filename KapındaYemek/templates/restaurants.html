@@ -1,25 +1,35 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='restaurants.css') }}">
+</head>
+<body>
+    {% extends "index.html" %}
 
-{% block title %}Restaurant Select Page{% endblock %}
+    {% block title %}Restaurant Select Page{% endblock %}
 
-{% block content %}
-    <h1>This is a restaurant selection page.</h1>
-    <form method="POST" action="{{ url_for('selectRestaurant') }}">
-        <label for="restaurant">Choose a restaurant:</label>
-        <select name="restaurant" id="restaurant" required>
-            {% for name in restaurant_names %}
-                <option value="{{ name }}">{{ name }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Select</button>
-    </form>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-{% endblock %}
+    {% block content %}
+        <h1>This is a restaurant selection page.</h1>
+        <form method="POST" action="{{ url_for('selectRestaurant') }}">
+            <label for="restaurant">Choose a restaurant:</label>
+            <select name="restaurant" id="restaurant" required>
+                {% for name in restaurant_names %}
+                    <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Select</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    {% endblock %}
+</body>
+</html>

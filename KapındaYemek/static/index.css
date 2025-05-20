@@ -76,13 +76,3 @@ footer {
     width: 100%;
     font-size: 0.95em;
 }
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li::before {
-    content: "👤 ";
-    margin-right: 5px;
-}

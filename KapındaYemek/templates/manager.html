@@ -1,53 +1,68 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='restaurants.css') }}">
+</head>
+<body>
+    {% extends "index.html" %}
 
-{% block title %}Manager Dashboard{% endblock %}
+    {% block title %}Manager Dashboard{% endblock %}
 
-{% block content %}
-  <h1>Manager Dashboard</h1>
-  <h2>Total Sales Amount: {{ total_sales }}</h2>
-  <h3>Monthly Sales Amount: {{ monthly_sales }}</h3>
+    {% block head %}
+        {{ super() }}
+        <link rel="stylesheet" href="{{ url_for('static', filename='manager.css') }}">
+    {% endblock %}
 
-  {% if sales %}
-  <ul>
-    {% for sale_id, price, status, date in sales %}
-      <li>
-        <strong>Sale ID:</strong> {{ sale_id }} &mdash;
-        <strong>Price:</strong> ${{ price }} &mdash;
-        <strong>Status:</strong> {{ status }} &mdash;
-        <strong>Date:</strong> {{ date }} &mdash;
+    {% block content %}
+      <h1>Manager Dashboard</h1>
+      <h2>Total Sales Amount: {{ total_sales }}</h2>
+      <h3>Monthly Sales Amount: {{ monthly_sales }}</h3>
 
-        {% if status == 'accepted' or status == 'refunded' %}
-          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
-                <input type="hidden" name="sale_id"    value="{{ sale_id }}">
-                <input type="hidden" name="decision"   value="Cancel Sale">
-              <button type="submit">Cancel Sale</button>
-          </form>
-        {% endif %}
+      {% if sales %}
+      <ul>
+        {% for sale_id, price, status, date in sales %}
+          <li>
+            <strong>Sale ID:</strong> {{ sale_id }} &mdash;
+            <strong>Price:</strong> ${{ price }} &mdash;
+            <strong>Status:</strong> {{ status }} &mdash;
+            <strong>Date:</strong> {{ date }} &mdash;
 
-        {% if status == 'rejected' %}
-          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
-              <input type="hidden" name="sale_id"    value="{{ sale_id }}">
-              <input type="hidden" name="decision"   value="Reopen Sale">
-            <button type="submit">Reopen Sale</button>
-          </form>
-        {% endif %}
+            {% if status == 'accepted' or status == 'refunded' %}
+              <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+                    <input type="hidden" name="decision"   value="Cancel Sale">
+                  <button type="submit">Cancel Sale</button>
+              </form>
+            {% endif %}
 
-        {% if status == 'pending' %}
-          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
-              <input type="hidden" name="sale_id"    value="{{ sale_id }}">
-              <input type="hidden" name="decision"   value="Accept">
-            <button type="submit">Accept</button>
-          </form>
-          <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
-                <input type="hidden" name="sale_id"    value="{{ sale_id }}">
-                <input type="hidden" name="decision"   value="Reject">
-            <button type="submit">Reject</button>
-          </form>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No sales available.</p>
-{% endif %}
-{% endblock %}
+            {% if status == 'rejected' %}
+              <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+                  <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+                  <input type="hidden" name="decision"   value="Reopen Sale">
+                <button type="submit">Reopen Sale</button>
+              </form>
+            {% endif %}
+
+            {% if status == 'pending' %}
+              <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+                  <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+                  <input type="hidden" name="decision"   value="Accept">
+                <button type="submit">Accept</button>
+              </form>
+              <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="sale_id"    value="{{ sale_id }}">
+                    <input type="hidden" name="decision"   value="Reject">
+                <button type="submit">Reject</button>
+              </form>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No sales available.</p>
+    {% endif %}
+    {% endblock %}
+</body>
+</html>    
