@@ -19,6 +19,8 @@
       <h1>Manager Dashboard</h1>
       <h2>Total Sales Amount: {{ total_sales }}</h2>
       <h3>Monthly Sales Amount: {{ monthly_sales }}</h3>
+        <p><a href="{{ url_for('define_discounts') }}">Define Time-Limited Discounts</a></p>
+
 
       {% if sales %}
       <ul>
@@ -37,7 +39,7 @@
               </form>
             {% endif %}
 
-            {% if status == 'rejected' %}
+            {% if status == 'rejected' or status == 'cancelled' %}
               <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
                   <input type="hidden" name="sale_id"    value="{{ sale_id }}">
                   <input type="hidden" name="decision"   value="Reopen Sale">
@@ -45,7 +47,7 @@
               </form>
             {% endif %}
 
-            {% if status == 'pending' %}
+            {% if status == 'pending' or status == 'reopened' %}
               <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
                   <input type="hidden" name="sale_id"    value="{{ sale_id }}">
                   <input type="hidden" name="decision"   value="Accept">
