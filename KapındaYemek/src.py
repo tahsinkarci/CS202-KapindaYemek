@@ -267,5 +267,23 @@ def define_discounts():
 
 
 
+
+@app.route("/manager/discounts", methods=["GET", "POST"])
+def define_discounts():
+    if request.method == "POST":
+        menu_item_id = request.form["menu_item_id"]
+        amount = request.form["amount"]
+        start_date = request.form["start_date"]
+        finish_date = request.form["finish_date"]
+
+        databaseConnection.create_discount(menu_item_id, amount, start_date, finish_date)
+        flash("Discount created successfully.")
+        return redirect(url_for("define_discounts"))
+
+    menu_items = databaseConnection.getAllMenuItems()
+    return render_template("discounts.html", menu_items=menu_items)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
