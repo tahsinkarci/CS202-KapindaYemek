@@ -18,6 +18,17 @@
 
     {% block content %}
         <h1>This is the menu page.</h1>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flashed-messages">
+              <ul>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endwith %}
         {% if restaurant_name %}
             <h2>Selected Restaurant: {{ restaurant_name }}</h2>
         {% endif %}
@@ -44,6 +55,7 @@
                 </ul>
                 <div class="menu-buttons">
                     <button type="submit" name="action" value="add">Add Item</button>
+                    <button type="submit" name="action" value="pay">Pay Cart</button>
                     
                 </div>
             </form>
@@ -73,7 +85,7 @@
                                             +
                                         </button>
                                     </div>
-                                    <span>Item Total: ${{ item_total }}</span>
+                                {% set ns.total = ns.total + item_total %}
                                 </li>
                             {% endfor %}
                         </ul>
@@ -82,7 +94,7 @@
                         </div>
                         <button type="submit" name="action" value="delete">Delete Selected from Cart</button>
                         <button type="submit" name="action" value="approve">Approve Cart</button>
-                        <button type="submit" name="action" value="pay">Pay Cart</button>
+                        
                         
                     </form>
                 {% else %}

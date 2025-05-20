@@ -162,6 +162,8 @@ def menu():
             flash(f"Cart approved! (Cart ID: {cart_id}, Total: ${total_amount})")
             session["cart"] = {}
 
+        elif action == "pay":
+            
             session.modified = True
             return redirect(url_for("pay"))  # Redirect to pay.html
 
