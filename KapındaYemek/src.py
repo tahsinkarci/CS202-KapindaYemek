@@ -86,9 +86,70 @@ def selectRestaurant():
     return render_template("restaurants.html", restaurant_names=restaurant_list)
 
 
-@app.route("/menu.html")
+@app.route("/menu.html", methods=["GET", "POST"])
 def menu():
-    return render_template("menu.html")
+    restaurant_name = request.args.get("restaurant_name") or session.get("restaurant_name")
+    if restaurant_name:
+        session["restaurant_name"] = restaurant_name
+    else:
+        flash("No restaurant selected.")
+        return redirect(url_for("selectRestaurant"))
+
+    menu_list = databaseConnection.getMenuByRestaurantName(restaurant_name)
+
+    # Initialize cart in session if not present
+    if "cart" not in session or not isinstance(session["cart"], dict):
+        session["cart"] = {}
+
+    if request.method == "POST":
+        action = request.form.get("action")
+        selected_items = request.form.getlist("selected_items")
+        item_id = request.form.get("item_id")  # For plus/minus
+
+        # Add selected items from menu to cart
+        if action == "add":
+            for item_id in selected_items:
+                if item_id not in session["cart"]:
+                    session["cart"][item_id] = 1
+            flash("Selected items added to cart.")
+
+        # Delete selected items from cart
+        elif action == "delete":
+            for item_id in selected_items:
+                session["cart"].pop(item_id, None)
+            flash("Selected items removed from cart.")
+
+        # Increment item count
+        elif action == "plus" and item_id:
+            if item_id in session["cart"]:
+                session["cart"][item_id] += 1
+
+        # Decrement item count (minimum 1)
+        elif action == "minus" and item_id:
+            if item_id in session["cart"] and session["cart"][item_id] > 1:
+                session["cart"][item_id] -= 1
+
+        # Approve cart
+        elif action == "approve":
+            flash("Cart approved! (You can implement order logic here.)")
+            session["cart"] = {}
+
+        session.modified = True
+
+    # Prepare cart items to display
+    cart_items = []
+    if session.get("cart"):
+        cart_items = [
+            (item[0], item[1], item[2], item[3], session["cart"].get(str(item[0]), 1))
+            for item in menu_list if str(item[0]) in session["cart"]
+        ]
+
+    return render_template(
+        "menu.html",
+        menu=menu_list,
+        restaurant_name=restaurant_name,
+        cart=cart_items
+    )
 
 
 @app.route("/update_sale_status", methods=["POST"])

@@ -115,6 +115,27 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+    
+    def getMenuByRestaurantName(self, restaurant_name):
+        cursor = self.conn.cursor()
+        #first, get the restaurant_id for the given restaurant_name
+        cursor.execute("SELECT restaurant_id FROM Restaurant WHERE name = %s", (restaurant_name,))
+        res = cursor.fetchone()
+        if not res:
+            cursor.close()
+            return []
+        restaurant_id = res[0]
+
+        #second, get menu items offered by this restaurant by using offers and menuitem tables
+        cursor.execute("""
+            SELECT m.menu_item_id, m.name, m.description, m.price
+            FROM MenuItem m
+            JOIN offers o ON m.menu_item_id = o.menu_item_id
+            WHERE o.restaurant_id = %s
+        """, (restaurant_id,))
+        menu_items = cursor.fetchall()
+        cursor.close()
+        return menu_items
 
     def createCart(self, cart_id, status, total_amount):  # in menu page the total am. needs to be calculated,
         cursor = self.conn.cursor(prepared=True)          # then cart has to be created
@@ -293,3 +314,4 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+

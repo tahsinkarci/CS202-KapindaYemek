@@ -1,0 +1,37 @@
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li::before {
+    content: "🍽️ ";
+    margin-right: 5px;
+}
+
+
+.counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.counter button {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+    text-align: center;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;   
+    background: #535353;
+    cursor: pointer;
+    margin: 0 2px;
+    transition: background 0.2s;
+}
+.counter button:hover {
+    background: #d0eaff;
+}
+.counter span {
+    min-width: 20px;
+    display: inline-block;
+    text-align: center;
+}
