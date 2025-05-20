@@ -4,7 +4,7 @@ from datetime import datetime
 
 print("Connector is working!")
 
-## enter your db password here
+## enter your db password here 
 databaseConnection = db("tHfB1848*D2#", "project")  # the constructor itself creates connection
 
 
