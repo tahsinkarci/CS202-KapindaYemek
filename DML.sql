@@ -101,6 +101,12 @@ INSERT INTO makes VALUES
 ('S004', 'U004', CURRENT_TIMESTAMP),
 ('S005', 'U005', CURRENT_TIMESTAMP);
 
+-- approves Table
+INSERT INTO approves VALUES
+('U003', 'C003'),
+('U004', 'C004'),
+('U005', 'C005');
+
 -- places Table
 INSERT INTO places VALUES
 ('S001', 'C001'),
