@@ -20,3 +20,4 @@ SELECT * FROM offers;
 SELECT * FROM receives;
 SELECT * FROM manages;
 SELECT * FROM checks;
+SELECT * FROM approves;
