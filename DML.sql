@@ -136,10 +136,7 @@ INSERT INTO receives VALUES
 -- manages Table
 INSERT INTO manages VALUES
 ('U001', 'R001'),
-('U002', 'R002'),
-('U003', 'R003'),
-('U004', 'R004'),
-('U005', 'R005');
+('U002', 'R002');
 
 -- checks Table
 INSERT INTO checks VALUES
