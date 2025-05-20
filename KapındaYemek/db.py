@@ -300,6 +300,13 @@ class db:
         cursor.close()
         return data
 
+    def create_places_relation(self, sale_id, cart_id):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO places (sale_id, cart_id) VALUES (%s, %s)"
+        cursor.execute(sql, (sale_id, cart_id))
+        self.conn.commit()
+        cursor.close()
+
     def createReceivesRelation(self, cart_id, restaurant_id):
         cursor = self.conn.cursor(prepared=True)
         sql = "INSERT INTO receives(cart_id, restaurant_id) " \
@@ -319,6 +326,17 @@ class db:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def create_make_relation(self, sale_id, user_id, date=None):
+        from datetime import datetime
+        if date is None:
+            date = datetime.now()
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO makes (sale_id, user_id, date) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (sale_id, user_id, date))
+        self.conn.commit()
+        cursor.close()
+
     def createCheck(self, sale_id, user_id):
         cursor = self.conn.cursor(prepared=True)
         sql = "INSERT INTO checks(sale_id, user_id) " \

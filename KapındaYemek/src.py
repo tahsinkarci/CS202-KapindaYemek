@@ -252,7 +252,8 @@ def pay():
                     new_sale_id = "S001"
                 databaseConnection.createSale(new_sale_id, "pending", databaseConnection.get_cart_amount(cart_id))  # create a new sale with status 'pending' and amount 0
 
-
+                databaseConnection.create_make_relation(new_sale_id, user_id) 
+                databaseConnection.create_places_relation(new_sale_id, cart_id)  
 
 
             flash(f"{len(selected_carts)} cart(s) marked as pending.")
