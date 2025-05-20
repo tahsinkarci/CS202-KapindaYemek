@@ -239,7 +239,7 @@ class db:
     def deleteDiscount(self,discount_id):
         cursor = self.conn.cursor(prepared=True)
         sql = "DELETE FROM Discount WHERE discount_id = %s",
-        cursor.execute(sql, (discount_id))
+        cursor.execute(sql, (discount_id,))
         self.conn.commit()
         data = cursor.fetchall()
         cursor.close()
@@ -432,10 +432,6 @@ class db:
         return cur.fetchall()
 
     def get_approved_carts_by_user(self, user_id):
-        """
-        Returns a list of approved carts for the given user_id.
-        Each cart is a tuple: (cart_id, status, total_amount, ...)
-        """
         cursor = self.conn.cursor()
         query = """
             SELECT c.cart_id, c.status, c.total_amount
@@ -452,5 +448,47 @@ class db:
         cursor.execute(sql, (user_id, cart_id))
         self.conn.commit()
         cursor.close()
+
+    def get_paid_carts_by_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT p.cart_id, s.price, m.date
+            FROM Sales s
+            JOIN makes m ON s.sale_id = m.sale_id
+            JOIN places p ON s.sale_id = p.sale_id
+            WHERE m.user_id = %s AND s.status = 'pending'
+            ORDER BY m.date DESC
+        """, (user_id,))
+        carts = cursor.fetchall()
+        cursor.close()
+        return carts
+
+    def get_accepted_carts_by_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT p.cart_id, s.price, m.date
+            FROM Sales s
+            JOIN makes m ON s.sale_id = m.sale_id
+            JOIN places p ON s.sale_id = p.sale_id
+            WHERE m.user_id = %s AND s.status = 'accepted'
+            ORDER BY m.date DESC
+        """, (user_id,))
+        carts = cursor.fetchall()
+        cursor.close()
+        return carts
+
+    def get_past_carts_by_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT p.cart_id, s.price, m.date, s.status
+            FROM Sales s
+            JOIN makes m ON s.sale_id = m.sale_id
+            JOIN places p ON s.sale_id = p.sale_id
+            WHERE m.user_id = %s AND s.status IN ('paid', 'accepted', 'refunded', 'cancelled', 'closed')
+            ORDER BY m.date DESC
+        """, (user_id,))
+        carts = cursor.fetchall()
+        cursor.close()
+        return carts
 
 

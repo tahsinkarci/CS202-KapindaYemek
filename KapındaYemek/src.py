@@ -163,7 +163,7 @@ def menu():
             session["cart"] = {}
 
         elif action == "pay":
-            
+
             session.modified = True
             return redirect(url_for("pay"))  # Redirect to pay.html
 
@@ -235,7 +235,7 @@ def manager():
         total_sales=total_sales,
         monthly_sales=monthly_sales
     )
-
+#PAY PAGE################################################################################
 @app.route("/pay", methods=["GET", "POST"])
 def pay():
     user_id = session.get("user_id")
@@ -243,14 +243,26 @@ def pay():
         selected_carts = request.form.getlist("selected_carts")
         if selected_carts:
             for cart_id in selected_carts:
-                databaseConnection.update_cart_status(cart_id, "paid")
-            flash(f"{len(selected_carts)} cart(s) marked as paid.")
+                databaseConnection.update_cart_status(cart_id, "pending")
+            flash(f"{len(selected_carts)} cart(s) marked as pending.")
         else:
             flash("No carts selected.")
         return redirect(url_for("pay"))
+    
+    databaseConnection.createSale() 
 
     approved_carts = databaseConnection.get_approved_carts_by_user(user_id)
-    return render_template("pay.html", carts=approved_carts)
+    pending_orders = databaseConnection.get_paid_carts_by_user(user_id)
+    accepted_orders = databaseConnection.get_accepted_carts_by_user(user_id)
+    past_orders = databaseConnection.get_past_carts_by_user(user_id)
+
+    return render_template(
+        "pay.html",
+        carts=approved_carts,
+        pending_orders=pending_orders,
+        accepted_orders=accepted_orders,
+        past_orders=past_orders
+    )
 
 
 @app.route("/manager/discounts", methods=["GET", "POST"])

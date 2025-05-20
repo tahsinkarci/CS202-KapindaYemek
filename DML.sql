@@ -71,11 +71,9 @@ INSERT INTO Cart VALUES
 
 -- Sales Table
 INSERT INTO Sales VALUES
-('S001', 'paid', 25.00),
-('S002', 'paid', 35.00),
-('S003', 'refunded', 20.00),
-('S004', 'pending', 15.50),
-('S005', 'paid', 40.75);
+('S003', 'pending', 20.00),
+('S004', 'closed', 15.50),
+('S005', 'pending', 40.75);
 
 -- Rating Table
 INSERT INTO Rating VALUES
@@ -95,8 +93,6 @@ INSERT INTO leaves VALUES
 
 -- makes Table
 INSERT INTO makes VALUES
-('S001', 'U001', CURRENT_TIMESTAMP),
-('S002', 'U002', CURRENT_TIMESTAMP),
 ('S003', 'U003', CURRENT_TIMESTAMP),
 ('S004', 'U004', CURRENT_TIMESTAMP),
 ('S005', 'U005', CURRENT_TIMESTAMP);
@@ -109,8 +105,6 @@ INSERT INTO approves VALUES
 
 -- places Table
 INSERT INTO places VALUES
-('S001', 'C001'),
-('S002', 'C002'),
 ('S003', 'C003'),
 ('S004', 'C004'),
 ('S005', 'C005');
@@ -147,8 +141,6 @@ INSERT INTO manages VALUES
 
 -- checks Table
 INSERT INTO checks VALUES
-('S001', 'U001'),
-('S002', 'U002'),
 ('S003', 'U003'),
-('S004', 'U004'),
-('S005', 'U005');
+('S004', 'U003'),
+('S005', 'U003');
