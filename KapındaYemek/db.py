@@ -366,3 +366,25 @@ class db:
         return result[0] if result else None
 
 
+############ Discounts ######################
+    def create_discount(self, menu_item_id, amount, start_date, finish_date):
+        cur = self.conn.cursor()
+        # generate next discount_id like D001
+        cur.execute("SELECT MAX(discount_id) FROM Discount")
+        last = cur.fetchone()[0]
+        next_id = f"D{int(last[1:]) + 1:03d}" if last else "D001"
+
+        cur.execute("""
+            INSERT INTO Discount (discount_id, menu_item_id, start_date, finish_date, amount)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (next_id, menu_item_id, start_date, finish_date, amount))
+
+        self.conn.commit()
+        cur.close()
+
+    def getAllMenuItems(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT menu_item_id, name FROM MenuItem")
+        return cur.fetchall()
+
+
