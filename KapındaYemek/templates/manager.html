@@ -37,7 +37,7 @@
               </form>
             {% endif %}
 
-            {% if status == 'rejected' %}
+            {% if status == 'rejected' or status == 'cancelled' %}
               <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
                   <input type="hidden" name="sale_id"    value="{{ sale_id }}">
                   <input type="hidden" name="decision"   value="Reopen Sale">
@@ -45,7 +45,7 @@
               </form>
             {% endif %}
 
-            {% if status == 'pending' %}
+            {% if status == 'pending' or status == 'reopened' %}
               <form action="{{ url_for('update_sale_status', sale_id=sale_id) }}" method="post" style="display:inline;">
                   <input type="hidden" name="sale_id"    value="{{ sale_id }}">
                   <input type="hidden" name="decision"   value="Accept">
